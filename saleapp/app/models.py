@@ -15,8 +15,8 @@ class User(db.Model, UserMixin):
     name = Column(String(50))
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
-    avatar = Column(String(100),
-                    default="")
+    avatar = Column(String(255),
+                    default="https://static01.nyt.com/images/2022/12/10/multimedia/10worldcup-ronaldo2-1-6662/10worldcup-ronaldo2-1-6662-jumbo.jpg?quality=75&auto=webp")
     user_role = Column(Enum(UserRole), default=UserRole.USER)
 
 
@@ -40,7 +40,8 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
         import hashlib
-        u = User(name='admin', username='admin', password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),
+
+        u = User(name ='admin', username='admin', password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()),
                  user_role=UserRole.ADMIN)
         db.session.add(u)
         db.session.commit()
