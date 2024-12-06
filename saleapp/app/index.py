@@ -1,9 +1,9 @@
 import math
-
 from flask import render_template, request, redirect
 import dao
-from __init__ import app, login
+from app import app, login
 from flask_login import login_user, logout_user
+
 
 
 @app.route("/")
@@ -73,4 +73,5 @@ def get_user_by_id(user_id):
 
 
 if __name__ == '__main__':
+    from app import  admin
     app.run(debug=True)

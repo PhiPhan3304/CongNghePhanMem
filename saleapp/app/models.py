@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, Enum
 from sqlalchemy.orm import relationship
-from __init__ import db, app
+from sqlalchemy import Column, Integer, String, Float,Boolean, ForeignKey, Enum
+from app import db, app
 from enum import Enum as RoleEnum
 from flask_login import UserMixin
 
@@ -36,15 +36,17 @@ class Products(db.Model):
     category_id = Column(Integer, ForeignKey(Category.id), nullable=False)
 
 
+
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
-        import hashlib
-
-        u = User(name ='admin', username='admin', password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()),
-                 user_role=UserRole.ADMIN)
-        db.session.add(u)
-        db.session.commit()
+        db.metadata.clear()
+        # db.create_all()
+        # import hashlib
+        #
+        # u = User(name ='admin', username='admin', password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()),
+        #          user_role=UserRole.ADMIN)
+        # db.session.add(u)
+        # db.session.commit()
         # c1 = Category(name="Mobile")
         # c2 = Category(name="Laptop")
         # c3 = Category(name="Tablet")
