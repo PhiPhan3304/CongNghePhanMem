@@ -1,6 +1,6 @@
 from models import Category, Products, User
 import hashlib
-from app import app, db
+from __init__ import app, db
 import cloudinary.uploader
 
 

@@ -1,5 +1,5 @@
-from app.models import  Category,Products,User
-from app import  app,db
+from models import  Category,Products,User
+from __init__ import  app,db
 from flask_admin import Admin
 from flask_admin.contrib.sqla import  ModelView
 

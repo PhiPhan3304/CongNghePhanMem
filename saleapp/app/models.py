@@ -1,6 +1,6 @@
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, Float,Boolean, ForeignKey, Enum
-from app import db, app
+from __init__ import db, app
 from enum import Enum as RoleEnum
 from flask_login import UserMixin
 
@@ -39,8 +39,8 @@ class Products(db.Model):
 
 if __name__ == '__main__':
     with app.app_context():
-        db.metadata.clear()
-        # db.create_all()
+
+        db.create_all()
         # import hashlib
         #
         # u = User(name ='admin', username='admin', password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()),
