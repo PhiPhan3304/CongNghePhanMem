@@ -1,6 +1,6 @@
-from models import Category, Products, User
+from app.models import Category, Product, User
+from app import app, db
 import hashlib
-from __init__ import app, db
 import cloudinary.uploader
 
 
@@ -8,41 +8,50 @@ def load_categories():
     return Category.query.order_by('id').all()
 
 
-def load_products(cate_id=None, kw=None, page=1):
-    query = Products.query
+def load_products(kw=None, category_id=None, page=1):
+    products = Product.query
+
     if kw:
-        query = query.filter(Products.name.contains(kw))
-    if cate_id:
-        query = query.filter(Products.category_id == cate_id)
+        products = products.filter(Product.name.contains(kw))
 
-    page_size =app.config['PAGE_SIZE']
+    if category_id:
+        products = products.filter(Product.category_id == category_id)
+
+    page_size = app.config["PAGE_SIZE"]
     start = (page - 1) * page_size
-    query = query.slice(start, start + page_size)
+    products = products.slice(start, start + page_size)
 
-    return query.all()
+    return products.all()
 
 
 def count_products():
-    return Products.query.count()
+    return Product.query.count()
 
 
-def auth_user(username, password):
-    password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
+def auth_user(username, password, role=None):
+    password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
 
-    return User.query.filter(User.username.__eq__(username), User.password.__eq__(password)).first()
+    u = User.query.filter(User.username.__eq__(username.strip()),
+                          User.password.__eq__(password))
+    if role:
+        u = u.filter(User.user_role.__eq__(role))
+
+    return u.first()
 
 
-def get_user_by_id(user_id):
-    return User.query.get(user_id)
+def add_user(name, username, password, avatar):
+    password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
 
+    u = User(name=name, username=username, password=password,
+             avatar='https://res.cloudinary.com/dxxwcby8l/image/upload/v1690528735/cg6clgelp8zjwlehqsst.jpg')
 
-def add_user(name, username, password,
-             avatar=None):
-    password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
-    u = User(name=name, username=username, password=password)
     if avatar:
         res = cloudinary.uploader.upload(avatar)
-        res.get('secure.url')
+        u.avatar = res.get('secure_url')
 
     db.session.add(u)
     db.session.commit()
+
+
+def get_user_by_id(id):
+    return User.query.get(id)
